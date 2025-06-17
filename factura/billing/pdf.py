@@ -1,5 +1,7 @@
-"""Simple PDF generation placeholder."""
+"""Utility for generating invoice PDFs."""
+
 from datetime import datetime
+from io import BytesIO
 
 try:
     from reportlab.lib.pagesizes import letter
@@ -9,13 +11,18 @@ except ImportError:  # pragma: no cover
     canvas = None
 
 
-def generate_invoice_pdf(invoice, path: str):
-    """Generate a PDF for the given invoice."""
+def generate_invoice_pdf(invoice) -> bytes:
+    """Return a PDF document for ``invoice`` as raw bytes.
+
+    The implementation falls back to a simple text file if ``reportlab``
+    is not installed.
+    """
+    buffer = BytesIO()
     if canvas is None:
-        with open(path, 'w') as f:
-            f.write(f'Invoice {invoice.id} - {datetime.now()}')
-        return
-    c = canvas.Canvas(path, pagesize=letter)
+        buffer.write(f'Invoice {invoice.id} - {datetime.now()}'.encode())
+        return buffer.getvalue()
+
+    c = canvas.Canvas(buffer, pagesize=letter)
     c.drawString(100, 750, f'Invoice {invoice.id}')
     y = 720
     for item in invoice.items.all():
@@ -23,3 +30,5 @@ def generate_invoice_pdf(invoice, path: str):
         y -= 20
     c.drawString(100, y - 20, f'Total: {invoice.total}')
     c.save()
+    buffer.seek(0)
+    return buffer.read()
