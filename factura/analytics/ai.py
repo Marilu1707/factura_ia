@@ -1,4 +1,4 @@
-"""Placeholder AI module using OpenAI API."""
+"""Minimal AI helpers built on top of the OpenAI API."""
 import logging
 
 try:

@@ -10,6 +10,9 @@ Sistema de facturación inteligente construido con Django y Django REST Framewor
 - Generación de predicciones y análisis mediante OpenAI.
 - API REST para integración con frontends.
 
+Este repositorio solo incluye el backend; se puede conectar con
+cualquier frontend profesional que consuma la API.
+
 ## Instalación
 
 1. Crear un entorno virtual y activar.

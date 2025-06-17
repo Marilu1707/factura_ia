@@ -1,17 +1,22 @@
+"""Authentication helpers for the billing API."""
+
 from django.contrib.auth.models import User
-from rest_framework import generics
+from rest_framework import generics, status
 from rest_framework.permissions import AllowAny
 from rest_framework.authtoken.models import Token
 from rest_framework.response import Response
 from rest_framework.views import APIView
-from rest_framework import status
 from django.contrib.auth import authenticate
 
 class RegisterView(generics.CreateAPIView):
+    """Create a new user and return an auth token."""
+
     queryset = User.objects.all()
     permission_classes = [AllowAny]
 
     def post(self, request, *args, **kwargs):
+        """Validate input, create the user and return a token."""
+
         username = request.data.get('username')
         password = request.data.get('password')
         if not username or not password:
@@ -23,9 +28,13 @@ class RegisterView(generics.CreateAPIView):
         return Response({'token': token.key})
 
 class LoginView(APIView):
+    """Authenticate an existing user and return a token."""
+
     permission_classes = [AllowAny]
 
     def post(self, request):
+        """Validate credentials and issue an auth token."""
+
         username = request.data.get('username')
         password = request.data.get('password')
         user = authenticate(username=username, password=password)

@@ -1,5 +1,8 @@
+"""Route definitions for the billing API."""
+
 from rest_framework import routers
 from django.urls import path
+
 from .views import ClientViewSet, ProductViewSet, InvoiceViewSet
 from .auth_views import RegisterView, LoginView
 
