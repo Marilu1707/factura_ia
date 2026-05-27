@@ -24,6 +24,7 @@ class InvoiceItemSerializer(serializers.ModelSerializer):
     class Meta:
         model = InvoiceItem
         fields = '__all__'
+        extra_kwargs = {'invoice': {'required': False, 'read_only': True}}
 
 class InvoiceSerializer(serializers.ModelSerializer):
     """Serializer for invoices including related items."""

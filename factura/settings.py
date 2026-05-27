@@ -64,6 +64,7 @@ LANGUAGE_CODE = 'en-us'
 TIME_ZONE = 'UTC'
 REST_FRAMEWORK = {
     'DEFAULT_AUTHENTICATION_CLASSES': ['rest_framework.authentication.TokenAuthentication'],
+    'DEFAULT_PERMISSION_CLASSES': ['rest_framework.permissions.IsAuthenticated'],
 }
 USE_I18N = True
 USE_L10N = True
