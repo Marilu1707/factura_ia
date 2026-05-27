@@ -1,28 +1,34 @@
-"""Minimal AI helpers built on top of the OpenAI API."""
+import os
 import logging
-
-try:
-    import openai
-except ImportError:  # pragma: no cover - openai may not be installed
-    openai = None
 
 logger = logging.getLogger(__name__)
 
-API_MODEL = 'gpt-4'
+API_MODEL = "gpt-4"
+
+try:
+    from openai import OpenAI
+    _client = OpenAI(api_key=os.getenv("OPENAI_API_KEY"))
+except ImportError:
+    _client = None
+    logger.warning("openai package not installed")
+
 
 def predict_sales(prompt: str) -> str:
-    """Return sales prediction from OpenAI."""
-    if openai is None:
-        logger.warning('openai not installed')
-        return 'Prediction unavailable'
-    response = openai.ChatCompletion.create(model=API_MODEL, messages=[{"role": "user", "content": prompt}])
-    return response.choices[0].message['content']
+    if _client is None:
+        return "Sales prediction not available (openai not installed)"
+    response = _client.chat.completions.create(
+        model=API_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.choices[0].message.content
+
 
 def detect_irregularities(data: str) -> str:
-    """Analyze data for potential irregularities."""
-    if openai is None:
-        logger.warning('openai not installed')
-        return 'No analysis available'
+    if _client is None:
+        return "Irregularity analysis not available (openai not installed)"
     prompt = f"Detect irregularities in: {data}"
-    response = openai.ChatCompletion.create(model=API_MODEL, messages=[{"role": "user", "content": prompt}])
-    return response.choices[0].message['content']
+    response = _client.chat.completions.create(
+        model=API_MODEL,
+        messages=[{"role": "user", "content": prompt}],
+    )
+    return response.choices[0].message.content
